@@ -1,0 +1,51 @@
+﻿<Page
+    x:Class="TrackYourLife_IoT.Presentation.Views.SendPatientOrganDataPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UwpClientApp.Presentation.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:views="using:TrackYourLife_IoT.Presentation.Views"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="8*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Column="1" Grid.Row="0" FontSize="28">Send Patient Organ Data</TextBlock>
+
+        <StackPanel Grid.Column="1" Grid.Row="1">
+            <ComboBox x:Name="PatientRequestComboBox" 
+                      Header="Patient"
+                      FontSize="24"
+                      PlaceholderText="Select patient request">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock><Run Text="{Binding FullName}"/> - <Run Text="{Binding OrganInfoName}"/></TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            
+            <Button x:Name="StartButton" FontSize="26">Start</Button>
+            <Button x:Name="StopButton" FontSize="26">Stop</Button>
+        </StackPanel>
+
+        <controls:Loading x:Name="Preloader" 
+                          Grid.ColumnSpan="3"
+                          Grid.RowSpan="2"
+                          HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                          HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+            <views:PreloaderContent></views:PreloaderContent>
+        </controls:Loading>
+    </Grid>
+</Page>
