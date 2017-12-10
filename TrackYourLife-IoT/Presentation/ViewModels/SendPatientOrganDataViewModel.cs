@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using TrackYourLife_IoT.Business;
 using TrackYourLife_IoT.Business.Services;
 using TrackYourLife_IoT.Presentation.Models.PatientRequests;
 using UwpClientApp.Presentation.Enums;
@@ -15,10 +16,12 @@ namespace TrackYourLife_IoT.Presentation.ViewModels.DonorRequest
 {
     public class SendPatientOrganDataViewModel : ViewModelBase
     {
-        private const int SendingPeriodInSeconds = 5;
+        private const int SendingPeriodInSeconds = 10;
 
         private readonly IPatientRequestService _patientRequestService;
         private readonly IOrganDataSnapshotsService _organDataSnapshotsService;
+        private readonly ISensorsService _sensorsService;
+
 
         private Timer _sendingOrganDataTimer;
         private CoreDispatcher _dispatcher;
@@ -28,11 +31,14 @@ namespace TrackYourLife_IoT.Presentation.ViewModels.DonorRequest
         private PatientRequestListItemModel _selectedPatientRequest;
         private bool _dataSendingIsInProgress;
 
-        public SendPatientOrganDataViewModel(IPatientRequestService patientRequestService,
-            IOrganDataSnapshotsService organDataSnapshotsService)
+        public SendPatientOrganDataViewModel(
+            IPatientRequestService patientRequestService,
+            IOrganDataSnapshotsService organDataSnapshotsService,
+            ISensorsService sensorsService)
         {
             _patientRequestService = patientRequestService;
             _organDataSnapshotsService = organDataSnapshotsService;
+            _sensorsService = sensorsService;
 
             Init();
         }
@@ -93,13 +99,19 @@ namespace TrackYourLife_IoT.Presentation.ViewModels.DonorRequest
             {
                 OnIsInProgressChanges(true);
 
+                var temperature = await GetTemperatureAsync();
+                if (!IsTemperatureWasReadSuccessfully(temperature))
+                {
+                    return;
+                }
+
                 var random = new Random();
                 var model = new OrganStateSnapshotModel
                 {
                     PatientRequestId = SelectedPatientRequest.Id,
                     Altitude = random.NextDouble(),
                     Longitude = random.NextDouble(),
-                    Temperature = random.Next(0, 20),
+                    Temperature = temperature,
                     Time = DateTime.UtcNow
                 };
 
@@ -109,6 +121,31 @@ namespace TrackYourLife_IoT.Presentation.ViewModels.DonorRequest
                 OnIsInProgressChanges(false);
             });
         }
+
+        private async Task<float> GetTemperatureAsync()
+        {
+            float temp = float.MinValue;
+
+            try
+            {
+                temp = await _sensorsService.GetCurrentTemperatureAsync();
+            }
+            catch (SensorReadingException)
+            {
+                await ShowErrorAsync("Cannot read sensor data");
+            }
+            catch (Exception ex)
+            {
+                await ShowErrorAsync(ex.Message);
+            }
+
+            return temp;
+        }
+
+        private bool IsTemperatureWasReadSuccessfully(float value)
+        {
+            return value != float.MinValue;
+        } 
 
         private async Task StartSendingCommandExecuted()
         {

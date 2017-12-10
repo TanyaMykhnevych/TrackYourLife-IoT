@@ -96,6 +96,8 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Business\SensorReadingException.cs" />
+    <Compile Include="Business\Services\Implementations\SensorsService.cs" />
     <Compile Include="Business\Services\IOrganDataSnapshotsService.cs" />
     <Compile Include="Business\Services\Implementations\OrganDataSnapshotsService.cs" />
     <Compile Include="Business\Services\IPatientRequestService.cs" />
@@ -104,6 +106,7 @@
     <Compile Include="Business\Services\Implementations\PreferencesService.cs" />
     <Compile Include="Business\Services\INetworkService.cs" />
     <Compile Include="Business\Services\IPreferencesService.cs" />
+    <Compile Include="Business\Services\ISensorsService.cs" />
     <Compile Include="Data\Api\ApiException.cs" />
     <Compile Include="Data\Api\ApiRouting.cs" />
     <Compile Include="Data\Api\APIs\Implementations\OrganDataSnapshotsRestApi.cs" />
@@ -116,6 +119,9 @@
     <Compile Include="Data\Api\Rest\RequestInterceptorBase.cs" />
     <Compile Include="Data\Api\Rest\RestApiBase.cs" />
     <Compile Include="Data\Api\Rest\UrlRequestBuilder.cs" />
+    <Compile Include="Data\Sensors\Dht11Reader.cs" />
+    <Compile Include="Data\Sensors\Interfaces\ISensorsReader.cs" />
+    <Compile Include="Data\Sensors\Models\SensorReadingWrapper.cs" />
     <Compile Include="Infrastructure\AutofacRegistrator.cs" />
     <Compile Include="Presentation\Enums\PatientRequestStatuses.cs" />
     <Compile Include="Presentation\Models\OrganDataSnapshots\OrganStateSnapshotModel.cs" />
@@ -165,6 +171,9 @@
   <ItemGroup>
     <PackageReference Include="Autofac">
       <Version>4.6.2</Version>
+    </PackageReference>
+    <PackageReference Include="Dht">
+      <Version>1.0.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.0.1</Version>
