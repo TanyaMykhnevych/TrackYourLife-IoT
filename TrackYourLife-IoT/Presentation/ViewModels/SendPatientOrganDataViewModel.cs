@@ -98,27 +98,30 @@ namespace TrackYourLife_IoT.Presentation.ViewModels.DonorRequest
             await _dispatcher.RunAsync(CoreDispatcherPriority.High, async () =>
             {
                 OnIsInProgressChanges(true);
-
-                var temperature = await GetTemperatureAsync();
-                if (!IsTemperatureWasReadSuccessfully(temperature))
+                try
                 {
-                    return;
+                    var temperature = await GetTemperatureAsync();
+                    if (!IsTemperatureWasReadSuccessfully(temperature))
+                    {
+                        return;
+                    }
+
+                    var random = new Random();
+                    var model = new OrganStateSnapshotModel
+                    {
+                        PatientRequestId = SelectedPatientRequest.Id,
+                        Altitude = random.NextDouble(),
+                        Longitude = random.NextDouble(),
+                        Temperature = temperature,
+                        Time = DateTime.UtcNow
+                    };
+
+                    await _organDataSnapshotsService.SendOrganDataSnapshotAsync(model);
                 }
-
-                var random = new Random();
-                var model = new OrganStateSnapshotModel
+                finally
                 {
-                    PatientRequestId = SelectedPatientRequest.Id,
-                    Altitude = random.NextDouble(),
-                    Longitude = random.NextDouble(),
-                    Temperature = temperature,
-                    Time = DateTime.UtcNow
-                };
-
-                await _organDataSnapshotsService.SendOrganDataSnapshotAsync(model);
-                await Task.Delay(1000);
-
-                OnIsInProgressChanges(false);
+                    OnIsInProgressChanges(false);
+                }
             });
         }
 
@@ -132,7 +135,8 @@ namespace TrackYourLife_IoT.Presentation.ViewModels.DonorRequest
             }
             catch (SensorReadingException)
             {
-                await ShowErrorAsync("Cannot read sensor data");
+                // TODO: Log error
+                // await ShowErrorAsync("Cannot read sensor data");
             }
             catch (Exception ex)
             {

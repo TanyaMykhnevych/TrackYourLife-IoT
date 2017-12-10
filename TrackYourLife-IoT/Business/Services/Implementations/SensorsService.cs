@@ -29,7 +29,14 @@ namespace TrackYourLife_IoT.Business.Services.Implementations
 
         public async Task<float> GetCurrentTemperatureAsync()
         {
-            var reading = await _dhtReader.ReadAsync();
+            SensorReadingWrapper<DhtReading> reading;
+
+            int counter = 0;
+            do
+            {
+                reading = await _dhtReader.ReadAsync();
+                await Task.Delay(50);
+            } while (!IsReadingValid(reading) && counter++ < 5);
 
             if (!IsReadingValid(reading))
             {

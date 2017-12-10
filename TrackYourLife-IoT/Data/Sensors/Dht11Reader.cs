@@ -11,14 +11,18 @@ namespace TrackYourLife_IoT.Drivers.DHT11
     {
         public async Task<SensorReadingWrapper<DhtReading>> ReadAsync()
         {
-            GpioPin pin = GpioController.GetDefault().OpenPin(4, GpioSharingMode.Exclusive);
-            Dht11 dht11 = new Dht11(pin, GpioPinDriveMode.Input);
-            DhtReading reading = await dht11.GetReadingAsync().AsTask();
+            var readingData = new SensorReadingWrapper<DhtReading>(d => d.IsValid);
 
-            return new SensorReadingWrapper<DhtReading>(d => d.IsValid)
+            var controller = GpioController.GetDefault();
+            using (GpioPin pin = controller.OpenPin(4, GpioSharingMode.Exclusive))
             {
-                Data = reading
-            };
+                using (Dht11 dht11 = new Dht11(pin, GpioPinDriveMode.Input))
+                {
+                    readingData.Data = await dht11.GetReadingAsync().AsTask();
+                }
+            }
+
+            return readingData;
         }
     }
 }
