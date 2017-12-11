@@ -9,24 +9,55 @@
     xmlns:views="using:TrackYourLife_IoT.Presentation.Views"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid>
+        <Grid.Background>
+            <SolidColorBrush>
+                #0B0B61
+            </SolidColorBrush>
+        </Grid.Background>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="8*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1.5*"/>
+            <RowDefinition Height="3*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Column="1" Grid.Row="0" FontSize="28">Send Patient Organ Data</TextBlock>
+        <TextBlock Grid.Column="1"
+                   Grid.Row="0"
+                   FontSize="28"
+                   Margin="50"
+                   Padding="50"
+                   FontWeight="ExtraBold"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   IsColorFontEnabled="True"
+                   Foreground="White">
+            Send Patient Organ Data
+        </TextBlock>
 
-        <StackPanel Grid.Column="1" Grid.Row="1">
+        <Image Stretch="None"
+                   Grid.Column="1"
+                   Grid.Row="1"
+                   Opacity="1" 
+                   Source="/Assets/logo.png"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"/>
+
+        <StackPanel Grid.Column="1" Grid.Row="2">
+            <TextBlock  FontSize="24"
+                      Margin="20, 20, 20, 0"
+                      Foreground="White">
+                Recipent
+            </TextBlock>
             <ComboBox x:Name="PatientRequestComboBox" 
-                      Header="Patient"
                       FontSize="24"
-                      PlaceholderText="Select patient request">
+                      PlaceholderText="Select patient request"
+                      Margin="20, 5, 20, 20"
+                      Background="White">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -35,14 +66,26 @@
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
-            
-            <Button x:Name="StartButton" FontSize="26">Start</Button>
-            <Button x:Name="StopButton" FontSize="26">Stop</Button>
+
+            <Button x:Name="StartButton"
+                    FontSize="28"
+                    Background="LightGreen"
+                    Margin="20"
+                    Foreground="DarkGreen">
+                Start
+            </Button>
+            <Button x:Name="StopButton"
+                    FontSize="28"
+                    Background="LightCoral"
+                    Foreground="DarkRed"
+                    Margin="20">
+                Stop
+            </Button>
         </StackPanel>
 
         <controls:Loading x:Name="Preloader" 
                           Grid.ColumnSpan="3"
-                          Grid.RowSpan="2"
+                          Grid.RowSpan="3"
                           HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                           HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
             <views:PreloaderContent></views:PreloaderContent>
