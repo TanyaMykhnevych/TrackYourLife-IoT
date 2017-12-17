@@ -12,5 +12,7 @@ namespace UwpClientApp.Presentation.Models.OrganDataSnapshots
         public DateTime Time { get; set; }
 
         public float Temperature { get; set; }
+
+        public float Humidity { get; set; }
     }
 }

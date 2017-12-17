@@ -29,6 +29,7 @@ namespace TrackYourLife_IoT.Presentation.Views
 
             d(this.BindCommand(ViewModel, vm => vm.StartSendingCommand, v => v.StartButton));
             d(this.BindCommand(ViewModel, vm => vm.StopSendingCommand, v => v.StopButton));
+            d(this.BindCommand(ViewModel, vm => vm.RefreshPatientRequestList, v => v.RefreshButton));
 
             d(this.OneWayBind(ViewModel, vm => vm.DataSendingIsInProgress, v => v.StartButton.Visibility,
                 isInProgress => isInProgress ? Visibility.Collapsed : Visibility.Visible));

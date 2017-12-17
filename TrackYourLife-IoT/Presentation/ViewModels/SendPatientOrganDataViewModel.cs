@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using TrackYourLife_IoT.Business;
 using TrackYourLife_IoT.Business.Services;
+using TrackYourLife_IoT.Presentation.Models.OrganDataSnapshots;
 using TrackYourLife_IoT.Presentation.Models.PatientRequests;
 using UwpClientApp.Presentation.Enums;
 using UwpClientApp.Presentation.Models.OrganDataSnapshots;
@@ -65,10 +66,13 @@ namespace TrackYourLife_IoT.Presentation.ViewModels.DonorRequest
 
         public ReactiveCommand StopSendingCommand { get; set; }
 
+        public ReactiveCommand RefreshPatientRequestList { get; set; }
+
         private async void Init()
         {
             StartSendingCommand = ReactiveCommand.CreateFromTask(StartSendingCommandExecuted);
             StopSendingCommand = ReactiveCommand.CreateFromTask(StopSendingCommandExecuted);
+            RefreshPatientRequestList = ReactiveCommand.CreateFromTask(RefreshRequestListCommandExecuted);
 
             this.ObservableForProperty(x => x.DataSendingIsInProgress).Subscribe(args =>
             {
@@ -100,8 +104,14 @@ namespace TrackYourLife_IoT.Presentation.ViewModels.DonorRequest
                 OnIsInProgressChanges(true);
                 try
                 {
-                    var temperature = await GetTemperatureAsync();
-                    if (!IsTemperatureWasReadSuccessfully(temperature))
+                    var result = await GetCurrentSensorMeasurment();
+
+                    if (!IsDataWasReadSuccessfully(result.Temperature))
+                    {
+                        return;
+                    }
+                    
+                    if (!IsDataWasReadSuccessfully(result.Humidity))
                     {
                         return;
                     }
@@ -112,7 +122,8 @@ namespace TrackYourLife_IoT.Presentation.ViewModels.DonorRequest
                         PatientRequestId = SelectedPatientRequest.Id,
                         Altitude = random.NextDouble(),
                         Longitude = random.NextDouble(),
-                        Temperature = temperature,
+                        Temperature = result.Temperature,
+                        Humidity = result.Humidity,
                         Time = DateTime.UtcNow
                     };
 
@@ -125,17 +136,19 @@ namespace TrackYourLife_IoT.Presentation.ViewModels.DonorRequest
             });
         }
 
-        private async Task<float> GetTemperatureAsync()
+        private async Task<SensorResult> GetCurrentSensorMeasurment()
         {
             float temp = float.MinValue;
+            float humidity = float.MinValue;
 
             try
             {
-                temp = await _sensorsService.GetCurrentTemperatureAsync();
+                var result = await _sensorsService.GetCurrentSensorMeasurment();
+                temp = result.Temperature;
+                humidity = result.Humidity;
             }
             catch (SensorReadingException)
             {
-                // TODO: Log error
                 // await ShowErrorAsync("Cannot read sensor data");
             }
             catch (Exception ex)
@@ -143,13 +156,17 @@ namespace TrackYourLife_IoT.Presentation.ViewModels.DonorRequest
                 await ShowErrorAsync(ex.Message);
             }
 
-            return temp;
-        }
+            SensorResult sensorResult = new SensorResult();
+            sensorResult.Temperature = temp;
+            sensorResult.Humidity = humidity;
 
-        private bool IsTemperatureWasReadSuccessfully(float value)
+            return sensorResult;
+        }
+        
+        private bool IsDataWasReadSuccessfully(float value)
         {
             return value != float.MinValue;
-        } 
+        }
 
         private async Task StartSendingCommandExecuted()
         {
@@ -162,6 +179,12 @@ namespace TrackYourLife_IoT.Presentation.ViewModels.DonorRequest
         private async Task StopSendingCommandExecuted()
         {
             DataSendingIsInProgress = false;
+        }
+
+        private async Task RefreshRequestListCommandExecuted()
+        {
+            PatientRequestList = new ReactiveList<PatientRequestListItemModel>(
+                await LoadPatientRequestListAsync());
         }
 
         private async Task<bool> Validate()
@@ -194,7 +217,7 @@ namespace TrackYourLife_IoT.Presentation.ViewModels.DonorRequest
 
                 return patientRequestListResponse.Content.PatientRequestList.ToList();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await ShowErrorAsync(ex.Message);
             }

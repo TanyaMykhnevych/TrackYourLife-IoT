@@ -28,7 +28,6 @@ namespace TrackYourLife_IoT.Infrastructure
         private static void RegisterServices(ContainerBuilder builder)
         {
             builder.RegisterType<PreferencesService>().As<IPreferencesService>();
-            builder.RegisterType<NetworkService>().As<INetworkService>();
             builder.RegisterType<PatientRequestService>().As<IPatientRequestService>();
             builder.RegisterType<OrganDataSnapshotsService>().As<IOrganDataSnapshotsService>();
 

@@ -1,6 +1,7 @@
 ﻿using Sensors.Dht;
 using System;
 using System.Threading.Tasks;
+using TrackYourLife_IoT.Business.Models;
 using TrackYourLife_IoT.Data.Sensors.Interfaces;
 using TrackYourLife_IoT.Data.Sensors.Models;
 
@@ -14,22 +15,11 @@ namespace TrackYourLife_IoT.Business.Services.Implementations
         {
             _dhtReader = dhtReader;
         }
-
-        public async Task<float> GetCurrentHumidityAsync()
-        {
-            var reading = await _dhtReader.ReadAsync();
-
-            if (!IsReadingValid(reading))
-            {
-                throw new SensorReadingException();
-            }
-
-            return (float)reading.Data.Humidity;
-        }
-
-        public async Task<float> GetCurrentTemperatureAsync()
+        
+        public async Task<SensorMeasurmentResult> GetCurrentSensorMeasurment()
         {
             SensorReadingWrapper<DhtReading> reading;
+            SensorMeasurmentResult result = new SensorMeasurmentResult();
 
             int counter = 0;
             do
@@ -43,7 +33,10 @@ namespace TrackYourLife_IoT.Business.Services.Implementations
                 throw new SensorReadingException();
             }
 
-            return (float)reading.Data.Temperature;
+            result.Humidity = (float)reading.Data.Humidity;
+            result.Temperature = (float)reading.Data.Temperature;
+
+            return result;
         }
 
         private bool IsReadingValid<T>(SensorReadingWrapper<T> data)

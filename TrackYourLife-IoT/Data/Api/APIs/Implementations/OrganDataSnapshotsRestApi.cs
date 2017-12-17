@@ -24,6 +24,7 @@ namespace TrackYourLife_IoT.Data.Api.APIs.Implementations
                 .Param(nameof(model.Altitude), model.Altitude.ToString())
                 .Param(nameof(model.Longitude), model.Longitude.ToString())
                 .Param(nameof(model.Temperature), model.Temperature.ToString(CultureInfo.InvariantCulture))
+                .Param(nameof(model.Humidity), model.Humidity.ToString(CultureInfo.InvariantCulture))
                 .Param(nameof(model.Time), model.Time.ToString())
                 .PostAsync<ResponseWrapper>();
         }

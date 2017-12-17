@@ -11,7 +11,7 @@
     <AssemblyName>TrackYourLife-IoTApp</AssemblyName>
     <DefaultLanguage>ru-RU</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.15063.0</TargetPlatformVersion>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.16299.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.10586.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
@@ -96,15 +96,14 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Business\Models\SensorMeasurmentResult.cs" />
     <Compile Include="Business\SensorReadingException.cs" />
     <Compile Include="Business\Services\Implementations\SensorsService.cs" />
     <Compile Include="Business\Services\IOrganDataSnapshotsService.cs" />
     <Compile Include="Business\Services\Implementations\OrganDataSnapshotsService.cs" />
     <Compile Include="Business\Services\IPatientRequestService.cs" />
     <Compile Include="Business\Services\Implementations\PatientRequestService.cs" />
-    <Compile Include="Business\Services\Implementations\NetworkService.cs" />
     <Compile Include="Business\Services\Implementations\PreferencesService.cs" />
-    <Compile Include="Business\Services\INetworkService.cs" />
     <Compile Include="Business\Services\IPreferencesService.cs" />
     <Compile Include="Business\Services\ISensorsService.cs" />
     <Compile Include="Data\Api\ApiException.cs" />
@@ -125,6 +124,7 @@
     <Compile Include="Infrastructure\AutofacRegistrator.cs" />
     <Compile Include="Presentation\Enums\PatientRequestStatuses.cs" />
     <Compile Include="Presentation\Models\OrganDataSnapshots\OrganStateSnapshotModel.cs" />
+    <Compile Include="Presentation\Models\OrganDataSnapshots\SensorResult.cs" />
     <Compile Include="Presentation\Models\PatientRequests\PatientRequestListItemModel.cs" />
     <Compile Include="Presentation\Models\PatientRequests\PatientRequestListModel.cs" />
     <Compile Include="Presentation\Models\ResponseWrapper.cs" />
@@ -198,11 +198,7 @@
       <Version>7.4.0</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Presentation\Constants\" />
-    <Folder Include="Presentation\Resources\" />
-    <Folder Include="Presentation\Utils\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

@@ -36,7 +36,7 @@
                    VerticalAlignment="Center"
                    IsColorFontEnabled="True"
                    Foreground="White">
-            Send Patient Organ Data
+            Send Recipient Organ Data
         </TextBlock>
 
         <Image Stretch="None"
@@ -51,21 +51,31 @@
             <TextBlock  FontSize="24"
                       Margin="20, 20, 20, 0"
                       Foreground="White">
-                Recipent
+                Recipent Request
             </TextBlock>
-            <ComboBox x:Name="PatientRequestComboBox" 
+            <StackPanel Orientation="Horizontal"
+                        Margin="20, 5, 20, 20">
+                <ComboBox x:Name="PatientRequestComboBox" 
                       FontSize="24"
-                      PlaceholderText="Select patient request"
-                      Margin="20, 5, 20, 20"
+                      PlaceholderText="Select patient request"                      
                       Background="White">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock><Run Text="{Binding FullName}"/> - <Run Text="{Binding OrganInfoName}"/></TextBlock>
-                        </StackPanel>
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock><Run Text="{Binding FullName}"/> - <Run Text="{Binding OrganInfoName}"/></TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <Button x:Name="RefreshButton"
+                        Margin="30, 0, 0, 0"
+                        Content="&#xE72C;"
+                        Background="AliceBlue"
+                        FontSize="24"
+                        FontFamily="Segoe MDL2 Assets"
+                        BorderBrush="Gray">
+                </Button>
+            </StackPanel>          
 
             <Button x:Name="StartButton"
                     FontSize="28"

@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using TrackYourLife_IoT.Business.Models;
 
 namespace TrackYourLife_IoT.Business.Services
 {
     public interface ISensorsService
     {
-        Task<float> GetCurrentTemperatureAsync();
-
-        Task<float> GetCurrentHumidityAsync();
+        Task<SensorMeasurmentResult> GetCurrentSensorMeasurment();
     }
 }
